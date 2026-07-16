@@ -32,15 +32,10 @@
 
         body{
 
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
 
-            background:
-                    linear-gradient(rgba(20,40,90,0.65),
-                    rgba(20,40,90,0.65)),
-                    url("images/civic-bg.jpg");
-
-            background-size: cover;
-            background-position: center;
+            /* Set to match the solid slate blue background from the image */
+            background-color: #72809d;
 
             height: 100vh;
 
@@ -51,38 +46,39 @@
 
         .main-container{
 
-            width: 95%;
-            max-width: 1400px;
+            width: 90%;
+            max-width: 1100px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
 
-            gap: 50px;
+            gap: 40px;
         }
 
         /* LEFT SIDE */
 
         .left-section{
 
-            width: 50%;
+            width: 55%;
             color: white;
         }
 
         .left-section h1{
 
-            font-size: 60px;
+            font-size: 48px;
             font-weight: bold;
             line-height: 1.2;
 
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .left-section p{
 
-            font-size: 22px;
-            width: 80%;
-            line-height: 1.6;
+            font-size: 18px;
+            width: 90%;
+            line-height: 1.5;
+            color: #f0f2f5;
         }
 
         .feature-box{
@@ -90,22 +86,30 @@
             display: flex;
             flex-wrap: wrap;
 
-            gap: 20px;
+            gap: 15px;
 
-            margin-top: 40px;
+            margin-top: 35px;
+            /* Limits width so the 4th item naturally falls to the next line */
+            max-width: 480px;
         }
 
         .feature{
 
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.1);
 
-            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
 
-            border-radius: 15px;
+            border-radius: 12px;
 
             padding: 20px;
 
-            width: 180px;
+            width: 140px;
+            height: 130px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
             text-align: center;
 
@@ -114,102 +118,114 @@
 
         .feature:hover{
 
-            transform: translateY(-5px);
-
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.15);
         }
 
         .feature i{
 
-            font-size: 40px;
-            margin-bottom: 15px;
+            font-size: 32px;
+            margin-bottom: 12px;
         }
 
         .feature h5{
 
-            font-size: 18px;
+            font-size: 13px;
             font-weight: bold;
+            margin: 0;
         }
 
         /* RIGHT SIDE */
 
         .register-card{
 
-            width: 430px;
+            width: 400px;
 
             background: white;
 
-            border-radius: 20px;
+            border-radius: 16px;
 
             padding: 40px;
 
-            box-shadow: 0px 5px 30px rgba(0,0,0,0.3);
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
         }
 
         .register-title{
 
             text-align: center;
 
-            color: #1e3c72;
+            color: #1a3668;
 
-            font-size: 45px;
+            font-size: 32px;
 
             font-weight: bold;
 
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .form-label{
 
             font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #222;
+        }
 
-            margin-bottom: 8px;
+        .input-group{
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            overflow: hidden;
         }
 
         .input-group-text{
-
-            background: white;
-            border-right: none;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            padding-right: 10px;
         }
 
         .form-control{
-
-            height: 50px;
-            border-left: none;
+            height: 45px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            padding-left: 0;
         }
 
         .form-control:focus{
-
             box-shadow: none;
-            border-color: #ced4da;
+        }
+
+        .input-group:focus-within{
+            border-color: #1a3668;
         }
 
         .register-btn{
 
             width: 100%;
 
-            height: 50px;
+            height: 48px;
 
-            background: #1e3c72;
+            background: #1a3668;
 
             color: white;
 
-            font-size: 20px;
+            font-size: 16px;
 
             font-weight: bold;
 
             border: none;
 
-            border-radius: 10px;
+            border-radius: 6px;
 
-            margin-top: 10px;
+            margin-top: 15px;
 
             transition: 0.3s;
         }
 
         .register-btn:hover{
 
-            background: #16325c;
+            background: #12264a;
         }
 
         .login-link{
@@ -218,13 +234,15 @@
 
             margin-top: 20px;
 
-            font-size: 18px;
+            font-size: 13px;
+            color: #555;
         }
 
         .login-link a{
 
             text-decoration: none;
             font-weight: bold;
+            color: #1a3668;
         }
 
         /* RESPONSIVE */
@@ -235,6 +253,13 @@
 
                 flex-direction: column;
                 padding: 30px 0;
+                height: auto;
+            }
+
+            body {
+                height: auto;
+                min-height: 100vh;
+                padding: 20px 0;
             }
 
             .left-section{
@@ -244,23 +269,25 @@
             }
 
             .left-section p{
-
                 width: 100%;
+                margin: 0 auto;
             }
 
             .feature-box{
 
                 justify-content: center;
+                max-width: 100%;
             }
 
             .register-card{
 
-                width: 95%;
+                width: 90%;
+                max-width: 400px;
             }
 
             .left-section h1{
 
-                font-size: 40px;
+                font-size: 38px;
             }
         }
 
