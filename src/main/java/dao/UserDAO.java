@@ -9,144 +9,112 @@ import java.sql.ResultSet;
 
 public class UserDAO {
 
-    Connection connection;
-
     // Check Duplicate Email or Mobile
-    public boolean checkUserExists(String email,
-                                   String mobile) {
+    public boolean checkUserExists(String email, String mobile) {
 
-        boolean status = false;
+        String sql = "SELECT 1 FROM civicuser WHERE email=? OR mobile=?";
 
-        try {
-
-            connection = DBConnection.getConnection();
-
-            String sql =
-                    "SELECT * FROM civicuser WHERE email=? OR mobile=?";
-
-            PreparedStatement ps =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ps.setString(2, mobile);
 
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()) {
-                status = true;
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
             }
-
-            rs.close();
-            ps.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return status;
+        return false;
     }
 
     // Registration
     public boolean registerUser(User user) {
 
-        boolean status = false;
+        String sql = "INSERT INTO civicuser (full_name,email,user_password,mobile) VALUES (?,?,?,?)";
 
-        try {
-
-            connection = DBConnection.getConnection();
-
-            String sql =
-                    "INSERT INTO civicuser(full_name,email,user_password,mobile) VALUES(?,?,?,?)";
-
-            PreparedStatement ps =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getMobile());
 
-            int row = ps.executeUpdate();
-
-            if(row > 0) {
-                status = true;
-            }
-
-            ps.close();
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return status;
+        return false;
     }
 
     // Login
-    public boolean loginUser(String email,
-                             String password) {
+    public boolean loginUser(String email, String password) {
 
-        boolean status = false;
+        String sql = "SELECT 1 FROM civicuser WHERE email=? AND user_password=?";
 
-        try {
-
-            connection = DBConnection.getConnection();
-
-            String sql =
-                    "SELECT * FROM civicuser WHERE email=? AND user_password=?";
-
-            PreparedStatement ps =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ps.setString(2, password);
 
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()) {
-                status = true;
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
             }
-
-            rs.close();
-            ps.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return status;
+        return false;
     }
 
+    // Get User Details
     public User getUserByEmail(String email) {
-        User user = null;
-        try {
-            connection = utility.DBConnection.getConnection();
-            // SQL update kiya gaya hai: PROFILE_IMAGE add kiya hai
-            String sql = "SELECT USER_ID, FULL_NAME, EMAIL, ROLE,DEPARTMENT,PROFILE_IMAGE FROM civicuser WHERE email=?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                user = new User();
-                // Dhyaan dein: Agar aapke Model class me id set karne ka naam alag hai (jaise setId), toh uske hisaab se update karein
-                user.setId(rs.getInt("USER_ID"));
-                user.setName(rs.getString("FULL_NAME"));
-                user.setEmail(rs.getString("EMAIL"));
-                user.setRole(rs.getString("ROLE"));// Oracle me data 'Citizen' ya 'Technician' hai
-                user.setDepartment(rs.getString("DEPARTMENT"));
-                // Naya logic image fetch karne ke liye
-                java.sql.Clob clob = rs.getClob("PROFILE_IMAGE");
-                if (clob != null) {
-                    user.setProfileImage(clob.getSubString(1, (int) clob.length()));
-                } else {
-                    user.setProfileImage("");
+        User user = null;
+
+        String sql =
+                "SELECT user_id, full_name, email, role, department, profile_image " +
+                        "FROM civicuser WHERE email=?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    user = new User();
+
+                    user.setId(rs.getInt("user_id"));
+                    user.setName(rs.getString("full_name"));
+                    user.setEmail(rs.getString("email"));
+                    user.setRole(rs.getString("role"));
+                    user.setDepartment(rs.getString("department"));
+
+                    String profileImage = rs.getString("profile_image");
+
+                    if (profileImage != null) {
+                        user.setProfileImage(profileImage);
+                    } else {
+                        user.setProfileImage("");
+                    }
                 }
             }
-            rs.close();
-            ps.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return user;
     }
 }

@@ -11,13 +11,28 @@ public class DBConnection {
 
         try {
 
-            Class.forName("oracle.jdbc.driver.OracleDriver");
+            if (connection == null || connection.isClosed()) {
 
-            connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@localhost:1521:orcl",
-                    "scott",
-                    "radhaswami"
-            );
+                Class.forName("org.postgresql.Driver");
+
+                String url = System.getenv("DB_URL");
+                String username = System.getenv("DB_USER");
+                String password = System.getenv("DB_PASSWORD");
+
+                // Local testing ke liye fallback
+                if (url == null || url.isEmpty()) {
+
+                    url = "jdbc:postgresql://ep-shy-art-azmjr8j0.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require";
+                    username = "neondb_owner";
+                    password = "npg_iR9ekTy3dExW";
+                }
+
+                connection = DriverManager.getConnection(
+                        url,
+                        username,
+                        password
+                );
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
